@@ -29,3 +29,4 @@ $string['pluginname'] = 'My first Moodle plugin';
 $string['privacy:metadata'] = 'The admin tool Mitxel plugin does not store any personal data.';
 $string['helloworld'] = 'Hello world!';
 $string['youareviewing'] = 'You are viewing course {$a}';
+$string['therearencourses'] = 'There are {$a} courses.';

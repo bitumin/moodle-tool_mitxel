@@ -34,9 +34,14 @@ $PAGE->set_pagelayout('report');
 $PAGE->set_title(get_string('helloworld', 'tool_mitxel'));
 $PAGE->set_heading(get_string('pluginname', 'tool_mitxel'));
 
+$course = $DB->get_record_sql('SELECT shortname, fullname FROM {course} WHERE id = ?', [$courseid]);
+$coursecount = $DB->count_records('course');
+
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('helloworld', 'tool_mitxel'));
 
 echo html_writer::div(get_string('youareviewing', 'tool_mitxel', $courseid));
+echo html_writer::div(format_string($course->fullname));
+echo html_writer::div(get_string('therearencourses', 'tool_mitxel', $courseid));
 
 echo $OUTPUT->footer();
