@@ -15,28 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Main file
+ * Callbacks for plugin tool_devcourse
  *
  * @package    tool_mitxel
  * @copyright  2018 Mitxel Moriana <mitxel@tresipunt.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../../config.php');
+defined('MOODLE_INTERNAL') || die();
 
-$courseid = required_param('id', PARAM_INT);
-
-$url = new moodle_url('/admin/tool/mitxel/index.php', ['id' => $courseid]);
-
-$PAGE->set_context(context_system::instance());
-$PAGE->set_url($url);
-$PAGE->set_pagelayout('report');
-$PAGE->set_title(get_string('helloworld', 'tool_mitxel'));
-$PAGE->set_heading(get_string('pluginname', 'tool_mitxel'));
-
-echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('helloworld', 'tool_mitxel'));
-
-echo html_writer::div(get_string('youareviewing', 'tool_mitxel', $courseid));
-
-echo $OUTPUT->footer();
+/**
+ * Adds this plugin to the course administration menu
+ *
+ * @param navigation_node $navigation The navigation node to extend
+ * @param stdClass $course The course to object for the tool
+ * @param context $context The context of the course
+ * @return void|null return null if we don't want to display the node.
+ * @throws coding_exception
+ * @throws moodle_exception
+ */
+function tool_mitxel_extend_navigation_course($navigation, $course, $context) {
+    $navigation->add(
+        get_string('pluginname', 'tool_mitxel'),
+        new moodle_url('/admin/tool/mitxel/index.php', ['id' => $course->id]),
+        navigation_node::TYPE_SETTING,
+        get_string('pluginname', 'tool_mitxel'),
+        'mitxel',
+        new pix_icon('icon', '', 'tool_mitxel')
+    );
+}
