@@ -24,6 +24,8 @@
 
 require_once(__DIR__ . '/../../../config.php');
 
+$courseid = optional_param('id', 0, PARAM_INT);
+
 $url = new moodle_url('/admin/tool/mitxel/index.php');
 
 $PAGE->set_context(context_system::instance());
@@ -32,17 +34,9 @@ $PAGE->set_pagelayout('report');
 $PAGE->set_title(get_string('helloworld', 'tool_mitxel'));
 $PAGE->set_heading(get_string('pluginname', 'tool_mitxel'));
 
-//echo get_string('helloworld', 'tool_mitxel');
+echo $OUTPUT->header();
+echo $OUTPUT->heading(get_string('helloworld', 'tool_mitxel'));
 
-//$userinput = 'no <b>tags</b> allowed in strings';
-//$userinput = '<span class="multilang" lang="en">RIGHT</span><span class="multilang" lang="fr">WRONG</span>';
-//$userinput = '<script>alert("hello world!")</script>';
-//$userinput = '3>2';
-$userinput = '2<3'; // Interesting effect, huh?
+echo html_writer::div(get_string('youareviewing', 'tool_mitxel', $courseid));
 
-echo html_writer::div(s($userinput)); // Used when you want to escape the value.
-echo html_writer::div(format_string($userinput)); // Used for one-line strings, such as forum post subject.
-echo html_writer::div(format_text($userinput)); // Used for multil-line rich-text contents such as forum post body.
-// format_text applies multilang filter.
-// None runs inline javascript code.
-// format_string filters out <3 (smiley?)
+echo $OUTPUT->footer();
