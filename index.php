@@ -15,16 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin strings are defined here.
+ * Main file
  *
- * @package     tool_mitxel
- * @category    string
- * @copyright   2018 Mitxel Moriana <mitxel@tresipunt.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    tool_mitxel
+ * @copyright  2018 Mitxel Moriana <mitxel@tresipunt.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+require_once(__DIR__ . '/../../../config.php');
 
-$string['pluginname'] = 'My first Moodle plugin';
-$string['privacy:metadata'] = 'The admin tool Mitxel plugin does not store any personal data.';
-$string['helloworld'] = 'Hello world!';
+$url = new moodle_url('/admin/tool/mitxel/index.php');
+
+$PAGE->set_context(context_system::instance());
+$PAGE->set_url($url);
+$PAGE->set_pagelayout('report');
+$PAGE->set_title(get_string('helloworld', 'tool_mitxel'));
+$PAGE->set_heading(get_string('pluginname', 'tool_mitxel'));
+
+echo get_string('helloworld', 'tool_mitxel');
