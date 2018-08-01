@@ -14,16 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Plugin strings are defined here.
- *
- * @package     tool_mitxel
- * @category    string
- * @copyright   2018 Mitxel Moriana <mitxel@tresipunt.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'My first Moodle plugin';
-$string['privacy:metadata'] = 'The admin tool Mitxel plugin does not store any personal data.';
+use core_privacy\local\metadata\null_provider;
+use \tool_mitxel\privacy\provider;
+
+class tool_mitxel_privacy_testcase extends \core_privacy\tests\provider_testcase {
+    /**
+     * Test provider is null provider
+     */
+    public function test_provider_is_null_provider() {
+        $this->assertInstanceOf(null_provider::class, new provider());
+    }
+
+    /**
+     * Test our provider (extending null provider) returns a valid privacy message string.
+     */
+    public function test_provider_returns_valid_reason_string() {
+        $reasonIdentifier = provider::get_reason();
+        $this->assertEquals('privacy:metadata', $reasonIdentifier);
+    }
+}
