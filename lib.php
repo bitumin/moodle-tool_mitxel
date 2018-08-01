@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Callbacks for plugin tool_devcourse
+ * Callbacks for plugin tool_mitxel
  *
  * @package    tool_mitxel
  * @copyright  2018 Mitxel Moriana <mitxel@tresipunt.com>

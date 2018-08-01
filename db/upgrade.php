@@ -30,18 +30,67 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @param int $oldversion
  * @return bool
+ * @throws ddl_change_structure_exception
+ * @throws ddl_exception
+ * @throws ddl_table_missing_exception
+ * @throws downgrade_exception
+ * @throws upgrade_exception
  */
 function xmldb_tool_mitxel_upgrade($oldversion) {
-    global $DB;
+    global $CFG, $DB;
 
     $dbman = $DB->get_manager();
 
-    // For further information please read the Upgrade API documentation:
-    // https://docs.moodle.org/dev/Upgrade_API
-    //
-    // You will also have to create the db/install.xml file by using the XMLDB Editor.
-    // Documentation for the XMLDB Editor can be found at:
-    // https://docs.moodle.org/dev/XMLDB_editor
+    if ($oldversion < 2018080110) {
+        // Define table tool_mitxel to be created.
+        $table = new xmldb_table('tool_mitxel');
+
+        // Adding fields to table tool_mitxel.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('completed', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('priority', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table tool_mitxel.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch create table for tool_mitxel.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Mitxel savepoint reached.
+        upgrade_plugin_savepoint(true, 2018080110, 'tool', 'mitxel');
+    }
+
+    if ($oldversion < 2018080111) {
+        // Define key courseid (foreign) to be added to tool_mitxel.
+        $table = new xmldb_table('tool_mitxel');
+        $key = new xmldb_key('courseid', XMLDB_KEY_FOREIGN, ['courseid'], 'course', ['id']);
+
+        // Launch add key courseid.
+        $dbman->add_key($table, $key);
+
+        // Mitxel savepoint reached.
+        upgrade_plugin_savepoint(true, 2018080111, 'tool', 'mitxel');
+    }
+
+    if ($oldversion < 2018080112) {
+        // Define index courseidname (unique) to be added to tool_mitxel.
+        $table = new xmldb_table('tool_mitxel');
+        $index = new xmldb_index('courseidname', XMLDB_INDEX_UNIQUE, ['courseid', 'name']);
+
+        // Conditionally launch add index courseidname.
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+
+        // Mitxel savepoint reached.
+        upgrade_plugin_savepoint(true, 2018080112, 'tool', 'mitxel');
+    }
 
     return true;
 }

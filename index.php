@@ -37,11 +37,27 @@ $PAGE->set_heading(get_string('pluginname', 'tool_mitxel'));
 $course = $DB->get_record_sql('SELECT shortname, fullname FROM {course} WHERE id = ?', [$courseid]);
 $coursecount = $DB->count_records('course');
 
+if (!$DB->record_exists('tool_mitxel', ['courseid' => $courseid])) {
+    $now = time();
+    $DB->insert_record('tool_mitxel', (object) [
+        'courseid' => $courseid,
+        'name' => $course->fullname,
+        'completed' => 0,
+        'priority' => 1,
+        'timecreated' => $now,
+        'timemodified' => $now,
+    ]);
+}
+
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('helloworld', 'tool_mitxel'));
 
 echo html_writer::div(get_string('youareviewing', 'tool_mitxel', $courseid));
 echo html_writer::div(format_string($course->fullname));
 echo html_writer::div(get_string('therearencourses', 'tool_mitxel', $courseid));
+
+// Display table.
+$table = new tool_mitxel_table('tool_mitxel', $courseid);
+$table->out(0, false);
 
 echo $OUTPUT->footer();
