@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'tool_mitxel';
-$plugin->release = '1.5';
-$plugin->version = 2018080114;
+$plugin->release = '1.6';
+$plugin->version = 2018080201;
 $plugin->requires = 2018051700;
 $plugin->maturity = MATURITY_ALPHA;

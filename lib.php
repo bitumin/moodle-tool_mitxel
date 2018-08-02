@@ -35,12 +35,14 @@ defined('MOODLE_INTERNAL') || die();
  * @throws moodle_exception
  */
 function tool_mitxel_extend_navigation_course($navigation, $course, $context) {
-    $navigation->add(
-        get_string('pluginname', 'tool_mitxel'),
-        new moodle_url('/admin/tool/mitxel/index.php', ['id' => $course->id]),
-        navigation_node::TYPE_SETTING,
-        get_string('pluginname', 'tool_mitxel'),
-        'mitxel',
-        new pix_icon('icon', '', 'tool_mitxel')
-    );
+    if (has_capability('tool/mitxel:view', $context)) {
+        $navigation->add(
+            get_string('pluginname', 'tool_mitxel'),
+            new moodle_url('/admin/tool/mitxel/index.php', ['id' => $course->id]),
+            navigation_node::TYPE_SETTING,
+            get_string('pluginname', 'tool_mitxel'),
+            'mitxel',
+            new pix_icon('icon', '', 'tool_mitxel')
+        );
+    }
 }

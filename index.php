@@ -26,6 +26,10 @@ require_once(__DIR__ . '/../../../config.php');
 
 $courseid = required_param('id', PARAM_INT);
 
+require_login($courseid);
+$context = context_course::instance($courseid);
+require_capability('tool/mitxel:view', $context);
+
 $url = new moodle_url('/admin/tool/mitxel/index.php', ['id' => $courseid]);
 
 $PAGE->set_context(context_system::instance());
@@ -53,7 +57,7 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('helloworld', 'tool_mitxel'));
 
 echo html_writer::div(get_string('youareviewing', 'tool_mitxel', $courseid));
-echo html_writer::div(format_string($course->fullname));
+echo html_writer::div(format_string($course->fullname, true, ['context' => $context]));
 echo html_writer::div(get_string('therearencourses', 'tool_mitxel', $courseid));
 
 // Display table.

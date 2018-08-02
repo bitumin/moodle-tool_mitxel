@@ -35,3 +35,5 @@ $string['name'] = 'Name';
 $string['priority'] = 'Priority';
 $string['timecreated'] = 'Created';
 $string['timemodified'] = 'Modified';
+$string['mitxel:edit'] = 'Edit mitxel data';
+$string['mitxel:view'] = 'View mitxel data';
