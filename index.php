@@ -64,4 +64,11 @@ echo html_writer::div(get_string('therearencourses', 'tool_mitxel', $courseid));
 $table = new tool_mitxel_table('tool_mitxel', $courseid);
 $table->out(0, false);
 
+// Link to add new entry.
+if (has_capability('tool/mitxel:edit', $context)) {
+    $editurl = new moodle_url('/admin/tool/mitxel/edit.php', ['courseid' => $courseid]);
+    $editlink = html_writer::link($editurl, get_string('newentry', 'tool_mitxel'));
+    echo html_writer::div($editlink);
+}
+
 echo $OUTPUT->footer();

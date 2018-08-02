@@ -48,21 +48,34 @@ class tool_mitxel_table extends table_sql {
         global $PAGE;
         parent::__construct($uniqueid);
 
-        $this->define_columns(['name', 'completed', 'priority', 'timecreated', 'timemodified']);
-        $this->define_headers([
+        $columns = [
+            'name',
+            'completed',
+            'priority',
+            'timecreated',
+            'timemodified'
+        ];
+        $headers = [
             get_string('name', 'tool_mitxel'),
             get_string('completed', 'tool_mitxel'),
             get_string('priority', 'tool_mitxel'),
             get_string('timecreated', 'tool_mitxel'),
             get_string('timemodified', 'tool_mitxel'),
-        ]);
+        ];
+        $this->context = context_course::instance($courseid);
+        if (has_capability('tool/mitxel:edit', $this->context)) {
+            $columns[] = 'edit';
+            $headers[] = '';
+        }
+        $this->define_columns($columns);
+        $this->define_headers($headers);
         $this->pageable(true);
         $this->collapsible(false);
         $this->sortable(false);
         $this->is_downloadable(false);
         $this->define_baseurl($PAGE->url);
-        $this->context = context_course::instance($courseid);
-        $this->set_sql('name, completed, priority, timecreated, timemodified', '{tool_mitxel}', 'courseid = ?', [$courseid]);
+        $fields = 'id, name, completed, priority, timecreated, timemodified';
+        $this->set_sql($fields, '{tool_mitxel}', 'courseid = ?', [$courseid]);
     }
 
     /**
@@ -117,5 +130,16 @@ class tool_mitxel_table extends table_sql {
      */
     protected function col_timemodified($row) {
         return userdate($row->timemodified, get_string('strftimedatetime'));
+    }
+
+    /**
+     * @param $row
+     * @return string
+     * @throws coding_exception
+     * @throws moodle_exception
+     */
+    protected function col_edit($row) {
+        $url = new moodle_url('/admin/tool/mitxel/edit.php', ['id' => $row->id]);
+        return html_writer::link($url, get_string('edit'));
     }
 }

@@ -37,3 +37,6 @@ $string['timecreated'] = 'Created';
 $string['timemodified'] = 'Modified';
 $string['mitxel:edit'] = 'Edit mitxel data';
 $string['mitxel:view'] = 'View mitxel data';
+$string['editentry'] = 'Edit entry';
+$string['errornameexists'] = 'Name must be unique in this course';
+$string['newentry'] = 'New entry';
