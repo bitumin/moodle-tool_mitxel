@@ -53,6 +53,17 @@ if (!$DB->record_exists('tool_mitxel', ['courseid' => $courseid])) {
     ]);
 }
 
+// Deleting an entry if specified.
+if ($deleteid = optional_param('delete', null, PARAM_INT)) {
+    require_sesskey();
+    $record = $DB->get_record('tool_mitxel', ['id' => $deleteid, 'courseid' => $courseid], '*', MUST_EXIST);
+    require_capability('tool/mitxel:edit', $PAGE->context);
+
+    $DB->delete_records('tool_mitxel', ['id' => $deleteid]);
+
+    redirect(new moodle_url('/admin/tool/mitxel/index.php', ['id' => $courseid]));
+}
+
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('helloworld', 'tool_mitxel'));
 
