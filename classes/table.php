@@ -48,6 +48,8 @@ class tool_mitxel_table extends table_sql {
         global $PAGE;
         parent::__construct($uniqueid);
 
+        $this->set_attribute('id', 'tool_mitxel_overview');
+
         $columns = [
             'name',
             'completed',

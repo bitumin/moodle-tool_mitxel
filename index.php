@@ -32,7 +32,7 @@ require_capability('tool/mitxel:view', $context);
 
 $url = new moodle_url('/admin/tool/mitxel/index.php', ['id' => $courseid]);
 
-$PAGE->set_context(context_system::instance());
+$PAGE->set_context($context);
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('report');
 $PAGE->set_title(get_string('helloworld', 'tool_mitxel'));
@@ -73,7 +73,7 @@ echo html_writer::div(get_string('therearencourses', 'tool_mitxel', $courseid));
 
 // Display table.
 $table = new tool_mitxel_table('tool_mitxel', $courseid);
-$table->out(0, false);
+$table->out(20, false);
 
 // Link to add new entry.
 if (has_capability('tool/mitxel:edit', $context)) {
