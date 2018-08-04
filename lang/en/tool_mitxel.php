@@ -43,3 +43,6 @@ $string['newentry'] = 'New entry';
 $string['editentrytitle'] = 'Edit entry {$a}';
 $string['description'] = 'Description';
 $string['confirmdeleteentry'] = 'Are you sure you want to delete this entry?';
+$string['evententrydeleted'] = 'Entry deleted';
+$string['evententrycreated'] = 'Entry created';
+$string['evententryupdated'] = 'Entry updated';

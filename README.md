@@ -20,6 +20,7 @@ php admin/tool/behat/cli/run.php --tags="@tool_mitxel"
 
 ```
 vendor/bin/phpunit admin/tool/mitxel/tests/api_test.php
+vendor/bin/phpunit admin/tool/mitxel/tests/events_test.php
 vendor/bin/phpunit admin/tool/mitxel/tests/privacy_provider_test.php
 ```
 

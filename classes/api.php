@@ -22,6 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use tool_mitxel\event\entry_created;
+use tool_mitxel\event\entry_deleted;
+use tool_mitxel\event\entry_updated;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once(__DIR__ . '/../../../../lib/formslib.php');
@@ -58,7 +62,6 @@ class tool_mitxel_api {
      * Update an entry
      *
      * @param stdClass $data
-     * @return bool
      * @throws coding_exception
      * @throws dml_exception
      */
@@ -83,7 +86,16 @@ class tool_mitxel_api {
         ]);
         $updatedata['timemodified'] = time();
 
-        return $DB->update_record('tool_mitxel', (object) $updatedata);
+        $DB->update_record('tool_mitxel', (object) $updatedata);
+
+        // Trigger event.
+        $entry = self::retrieve($data->id);
+        $event = entry_updated::create([
+            'context' => context_course::instance($entry->courseid),
+            'objectid' => $entry->id
+        ]);
+        $event->add_record_snapshot('tool_mitxel', $entry);
+        $event->trigger();
     }
 
     /**
@@ -126,6 +138,13 @@ class tool_mitxel_api {
             $DB->update_record('tool_mitxel', (object) $updatedata);
         }
 
+        // Trigger event.
+        $event = entry_created::create([
+            'context' => context_course::instance($data->courseid),
+            'objectid' => $entryid
+        ]);
+        $event->trigger();
+
         return $entryid;
     }
 
@@ -134,13 +153,28 @@ class tool_mitxel_api {
      *
      * @param int $id
      * @throws dml_exception
+     * @throws coding_exception
      */
     public static function delete($id) {
         global $DB;
+        if (!$entry = self::retrieve($id, 0, IGNORE_MISSING)) {
+            return;
+        }
 
         $DB->delete_records('tool_mitxel', ['id' => $id]);
+
+        // Trigger event.
+        $event = entry_deleted::create([
+            'context' => context_course::instance($entry->courseid),
+            'objectid' => $entry->id
+        ]);
+        $event->add_record_snapshot('tool_mitxel', $entry);
+        $event->trigger();
     }
 
+    /**
+     * @return array
+     */
     public static function editor_options() {
         global $PAGE;
 
@@ -150,5 +184,17 @@ class tool_mitxel_api {
             'context' => $PAGE->context,
             'noclean' => true,
         ];
+    }
+
+    /**
+     * Observer for course_deleted event - deletes all associated entries
+     *
+     * @param \core\event\course_deleted $event
+     * @throws dml_exception
+     */
+    public static function course_deleted_observer(\core\event\course_deleted $event) {
+        global $DB;
+
+        $DB->delete_records('tool_mitxel', ['courseid' => $event->objectid]);
     }
 }
