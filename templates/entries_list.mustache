@@ -15,9 +15,11 @@
     @template tool_mitxel/entries_list
      Template for the list of etries.
      Classes required for JS:
-    -
+      * tool_mitxel_entries_list
      Data attributes required for JS:
-    -
+      * data-entryid
+      * data-action
+      * data-courseid
      Context variables required for this template:
     -
      Example context (json):
@@ -28,6 +30,7 @@
         "addlink": "#"
     }
 }}
+<div class="tool_mitxel_entries_list" data-courseid="{{courseid}}">
 <h2>{{#str}} helloworld , tool_mitxel {{/str}}</h2>
 <p>{{#str}} youareviewing , tool_mitxel , {{courseid}} {{/str}}</p>
 <p>{{{coursename}}}</p>
@@ -37,6 +40,7 @@
         <a role="button" href="{{addlink}}" class="btn btn-primary">{{#str}} newentry , tool_mitxel {{/str}}</a>
     </div>
 {{/addlink}}
+</div>
 {{#js}}
     require(['tool_mitxel/confirm'], function(c) {
         c.init('[data-action=deleteentry]');

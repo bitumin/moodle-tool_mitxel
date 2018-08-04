@@ -66,7 +66,7 @@ if ($form->is_cancelled()) {
 } else if ($data = $form->get_data()) {
     if ($data->id) {
         // Edit entry. Never modify courseid.
-        $entry = tool_mitxel_api::update($data);
+        tool_mitxel_api::update($data);
     } else {
         // Add entry.
         tool_mitxel_api::insert($data);

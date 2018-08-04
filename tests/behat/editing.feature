@@ -39,7 +39,7 @@ Feature: Creating, editing and deleting entries
       | test entry 1 | plain description | Yes       |
     And I log out
 
-  Scenario: Delete an entry
+  Scenario: Delete an entry with javascript disabled
     When I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I navigate to "My first Moodle plugin" in current page administration
@@ -50,6 +50,23 @@ Feature: Creating, editing and deleting entries
     And I set the field "Name" to "test entry 2"
     And I press "Save changes"
     And I click on "Delete" "link" in the "test entry 1" "table_row"
+    Then I should see "test entry 2"
+    And I should not see "test entry 1"
+    And I log out
+
+  @javascript
+  Scenario: Delete an entry with javascript enabled
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    And I navigate to "My first Moodle plugin" in current page administration
+    And I follow "New entry"
+    And I set the field "Name" to "test entry 1"
+    And I press "Save changes"
+    And I follow "New entry"
+    And I set the field "Name" to "test entry 2"
+    And I press "Save changes"
+    And I click on "Delete" "link" in the "test entry 1" "table_row"
+    And I press "Yes"
     Then I should see "test entry 2"
     And I should not see "test entry 1"
     And I log out

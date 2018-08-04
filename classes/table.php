@@ -167,6 +167,9 @@ class tool_mitxel_table extends table_sql {
 
         return html_writer::link($editurl, get_string('edit'), ['title' => $editstr])
             . '<br>'
-            . html_writer::link($deleteurl, get_string('delete'), ['data-action' => 'deleteentry']);
+            . html_writer::link($deleteurl, get_string('delete'), [
+                'data-action' => 'deleteentry',
+                'data-entryid' => $row->id,
+            ]);
     }
 }
