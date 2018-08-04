@@ -42,24 +42,21 @@ $course = $DB->get_record_sql('SELECT shortname, fullname FROM {course} WHERE id
 $coursecount = $DB->count_records('course');
 
 if (!$DB->record_exists('tool_mitxel', ['courseid' => $courseid])) {
-    $now = time();
-    $DB->insert_record('tool_mitxel', (object) [
+    tool_mitxel_api::insert((object) [
         'courseid' => $courseid,
         'name' => $course->fullname,
         'completed' => 0,
         'priority' => 1,
-        'timecreated' => $now,
-        'timemodified' => $now,
     ]);
 }
 
 // Deleting an entry if specified.
 if ($deleteid = optional_param('delete', null, PARAM_INT)) {
     require_sesskey();
-    $record = $DB->get_record('tool_mitxel', ['id' => $deleteid, 'courseid' => $courseid], '*', MUST_EXIST);
+    $record = tool_mitxel_api::retrieve($deleteid, $courseid);
     require_capability('tool/mitxel:edit', $PAGE->context);
 
-    $DB->delete_records('tool_mitxel', ['id' => $deleteid]);
+    tool_mitxel_api::delete($record->id);
 
     redirect(new moodle_url('/admin/tool/mitxel/index.php', ['id' => $courseid]));
 }

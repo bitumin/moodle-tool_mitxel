@@ -31,7 +31,7 @@ class tool_mitxel_privacy_testcase extends \core_privacy\tests\provider_testcase
      * Test our provider (extending null provider) returns a valid privacy message string.
      */
     public function test_provider_returns_valid_reason_string() {
-        $reasonIdentifier = provider::get_reason();
-        $this->assertEquals('privacy:metadata', $reasonIdentifier);
+        $reasonidentifier = provider::get_reason();
+        $this->assertEquals('privacy:metadata', $reasonidentifier);
     }
 }

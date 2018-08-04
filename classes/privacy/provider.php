@@ -24,7 +24,7 @@
 
 namespace tool_mitxel\privacy;
 
-\defined('MOODLE_INTERNAL') || die();
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * Privacy Subsystem for tool_mitxel implementing null_provider.

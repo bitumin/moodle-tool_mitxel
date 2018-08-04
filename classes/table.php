@@ -142,7 +142,11 @@ class tool_mitxel_table extends table_sql {
      */
     protected function col_edit($row) {
         $editurl = new moodle_url('/admin/tool/mitxel/edit.php', ['id' => $row->id]);
-        $deleteurl = new moodle_url('/admin/tool/mitxel/index.php', ['delete' => $row->id, 'id' => $this->context->instanceid, 'sesskey' => sesskey()]);
+        $deleteurl = new moodle_url('/admin/tool/mitxel/index.php', [
+            'delete' => $row->id,
+            'id' => $this->context->instanceid,
+            'sesskey' => sesskey()
+        ]);
         $editstr = get_string('editentrytitle', 'tool_mitxel', format_string($row->name));
 
         return html_writer::link($editurl, get_string('edit'), ['title' => $editstr])

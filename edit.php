@@ -28,7 +28,7 @@ $id = optional_param('id', 0, PARAM_INT);
 
 if ($id) {
     // We are going to edit an entry.
-    $entry = $DB->get_record('tool_mitxel', ['id' => $id], '*', MUST_EXIST);
+    $entry = tool_mitxel_api::retrieve($id);
     $courseid = $entry->courseid;
     $urlparams = ['id' => $id];
     $title = get_string('newentry', 'tool_mitxel');
@@ -61,22 +61,10 @@ if ($form->is_cancelled()) {
 } else if ($data = $form->get_data()) {
     if ($data->id) {
         // Edit entry. Never modify courseid.
-        $DB->update_record('tool_mitxel', (object) [
-            'id' => $data->id,
-            'name' => $data->name,
-            'completed' => $data->completed,
-            'timemodified' => time()
-        ]);
+        $entry = tool_mitxel_api::update($data);
     } else {
         // Add entry.
-        $DB->insert_record('tool_mitxel', (object) [
-            'courseid' => $data->courseid,
-            'name' => $data->name,
-            'completed' => $data->completed,
-            'priority' => 0,
-            'timecreated' => time(),
-            'timemodified' => time()
-        ]);
+        tool_mitxel_api::insert($data);
     }
     redirect($returnurl);
 }
