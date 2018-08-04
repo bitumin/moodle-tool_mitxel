@@ -42,3 +42,4 @@ $string['errornameexists'] = 'Name must be unique in this course';
 $string['newentry'] = 'New entry';
 $string['editentrytitle'] = 'Edit entry {$a}';
 $string['description'] = 'Description';
+$string['confirmdeleteentry'] = 'Are you sure you want to delete this entry?';

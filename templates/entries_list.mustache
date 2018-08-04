@@ -37,3 +37,8 @@
         <a role="button" href="{{addlink}}" class="btn btn-primary">{{#str}} newentry , tool_mitxel {{/str}}</a>
     </div>
 {{/addlink}}
+{{#js}}
+    require(['tool_mitxel/confirm'], function(c) {
+        c.init('[data-action=deleteentry]');
+    });
+{{/js}}
