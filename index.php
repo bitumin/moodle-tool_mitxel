@@ -61,22 +61,9 @@ if ($deleteid = optional_param('delete', null, PARAM_INT)) {
     redirect(new moodle_url('/admin/tool/mitxel/index.php', ['id' => $courseid]));
 }
 
-echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('helloworld', 'tool_mitxel'));
-
-echo html_writer::div(get_string('youareviewing', 'tool_mitxel', $courseid));
-echo html_writer::div(format_string($course->fullname, true, ['context' => $context]));
-echo html_writer::div(get_string('therearencourses', 'tool_mitxel', $courseid));
-
-// Display table.
-$table = new tool_mitxel_table('tool_mitxel', $courseid);
-$table->out(20, false);
-
-// Link to add new entry.
-if (has_capability('tool/mitxel:edit', $context)) {
-    $editurl = new moodle_url('/admin/tool/mitxel/edit.php', ['courseid' => $courseid]);
-    $editlink = html_writer::link($editurl, get_string('newentry', 'tool_mitxel'));
-    echo html_writer::div($editlink);
-}
-
-echo $OUTPUT->footer();
+$outputpage = new \tool_mitxel\output\entries_list($courseid);
+/** @var tool_mitxel_renderer $output */
+$output = $PAGE->get_renderer('tool_mitxel');
+echo $output->header();
+echo $output->render($outputpage);
+echo $output->footer();
