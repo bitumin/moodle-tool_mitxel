@@ -52,6 +52,7 @@ class tool_mitxel_table extends table_sql {
 
         $columns = [
             'name',
+            'description',
             'completed',
             'priority',
             'timecreated',
@@ -59,6 +60,7 @@ class tool_mitxel_table extends table_sql {
         ];
         $headers = [
             get_string('name', 'tool_mitxel'),
+            get_string('description', 'tool_mitxel'),
             get_string('completed', 'tool_mitxel'),
             get_string('priority', 'tool_mitxel'),
             get_string('timecreated', 'tool_mitxel'),
@@ -76,7 +78,7 @@ class tool_mitxel_table extends table_sql {
         $this->sortable(false);
         $this->is_downloadable(false);
         $this->define_baseurl($PAGE->url);
-        $fields = 'id, name, completed, priority, timecreated, timemodified';
+        $fields = 'id, name, completed, priority, timecreated, timemodified, description, descriptionformat';
         $this->set_sql($fields, '{tool_mitxel}', 'courseid = ?', [$courseid]);
     }
 
@@ -110,6 +112,20 @@ class tool_mitxel_table extends table_sql {
      */
     protected function col_name($row) {
         return format_string($row->name, true, ['context' => $this->context]);
+    }
+
+    /**
+     * Displays column description
+     *
+     * @param stdClass $row
+     * @return string
+     */
+    protected function col_description($row) {
+        $editoroptions = tool_mitxel_api::editor_options();
+        $description = file_rewrite_pluginfile_urls($row->description, 'pluginfile.php',
+            $editoroptions['context']->id, 'tool_mitxel', 'entry', $row->id, $editoroptions);
+
+        return format_text($description, $row->descriptionformat, $editoroptions);
     }
 
     /**

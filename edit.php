@@ -52,6 +52,11 @@ $PAGE->set_title($title);
 $PAGE->set_heading(get_string('pluginname', 'tool_mitxel'));
 
 $form = new tool_mitxel_form();
+if (!empty($entry->id)) {
+    $editoroptions = tool_mitxel_api::editor_options();
+    file_prepare_standard_editor($entry, 'description', $editoroptions, $PAGE->context,
+        'tool_mitxel', 'entry', $entry->id);
+}
 $form->set_data($entry);
 
 $returnurl = new moodle_url('/admin/tool/mitxel/index.php', ['id' => $courseid]);

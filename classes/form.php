@@ -46,10 +46,16 @@ class tool_mitxel_form extends moodleform {
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
 
-        $mform->addElement('text', 'name', get_string('name', 'tool_mitxel'));
+        $namestr = get_string('name', 'tool_mitxel');
+        $mform->addElement('text', 'name', $namestr);
         $mform->setType('name', PARAM_NOTAGS);
 
-        $mform->addElement('advcheckbox', 'completed', get_string('completed', 'tool_mitxel'));
+        $completedstr = get_string('completed', 'tool_mitxel');
+        $mform->addElement('advcheckbox', 'completed', $completedstr);
+
+        $descriptionstr = get_string('description', 'tool_mitxel');
+        $editoroptions = tool_mitxel_api::editor_options();
+        $mform->addElement('editor', 'description_editor', $descriptionstr, null, $editoroptions);
 
         $this->add_action_buttons();
     }

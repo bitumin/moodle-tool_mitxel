@@ -51,12 +51,14 @@ class tool_mitxel_api_testcase extends advanced_testcase {
             'courseid' => $course->id,
             'name' => 'testname1',
             'completed' => 1,
-            'priority' => 0
+            'priority' => 0,
+            'description' => 'description plain',
         ]);
 
         $entry = tool_mitxel_api::retrieve($entryid);
         $this->assertEquals($course->id, $entry->courseid);
         $this->assertEquals('testname1', $entry->name);
+        $this->assertEquals('description plain', $entry->description);
     }
 
     /**
@@ -66,17 +68,19 @@ class tool_mitxel_api_testcase extends advanced_testcase {
         $course = self::getDataGenerator()->create_course();
         $entryid = tool_mitxel_api::insert((object) [
             'courseid' => $course->id,
-            'name' => 'testname1'
+            'name' => 'testname1',
         ]);
 
         tool_mitxel_api::update((object) [
             'id' => $entryid,
-            'name' => 'testname2'
+            'name' => 'testname2',
+            'description' => 'description plain',
         ]);
 
         $entry = tool_mitxel_api::retrieve($entryid);
         $this->assertEquals($course->id, $entry->courseid);
         $this->assertEquals('testname2', $entry->name);
+        $this->assertEquals('description plain', $entry->description);
     }
 
     /**
@@ -93,5 +97,41 @@ class tool_mitxel_api_testcase extends advanced_testcase {
 
         $entry = tool_mitxel_api::retrieve($entryid, 0, IGNORE_MISSING);
         $this->assertEmpty($entry);
+    }
+
+    /**
+     * Test description editor.
+     */
+    public function test_description_editor() {
+        self::setAdminUser();
+        $course = self::getDataGenerator()->create_course();
+
+        $entryid = tool_mitxel_api::insert((object) [
+            'courseid' => $course->id,
+            'name' => 'testname1',
+            'description_editor' => [
+                'text' => 'description formatted',
+                'format' => FORMAT_HTML,
+                'itemid' => file_get_unused_draft_itemid()
+            ]
+        ]);
+
+        $entry = tool_mitxel_api::retrieve($entryid);
+        $this->assertEquals('description formatted', $entry->description);
+
+        tool_mitxel_api::update((object) [
+            'id' => $entryid,
+            'name' => 'testname2',
+            'description_editor' => [
+                'text' => 'description edited',
+                'format' => FORMAT_HTML,
+                'itemid' => file_get_unused_draft_itemid()
+            ]
+        ]);
+
+        $entry = tool_mitxel_api::retrieve($entryid);
+        $this->assertEquals($course->id, $entry->courseid);
+        $this->assertEquals('testname2', $entry->name);
+        $this->assertEquals('description edited', $entry->description);
     }
 }

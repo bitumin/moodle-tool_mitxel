@@ -63,13 +63,24 @@ class tool_mitxel_api {
      * @throws dml_exception
      */
     public static function update($data) {
-        global $DB;
+        global $DB, $PAGE;
 
         if (empty($data->id)) {
             throw new coding_exception('Object data must contain property id');
         }
-        // Only fields name, completed, priority can be modified.
-        $updatedata = array_intersect_key((array) $data, ['id' => 1, 'name' => 1, 'completed' => 1, 'priority' => 1]);
+        if (isset($data->description_editor)) {
+            $data = file_postupdate_standard_editor($data, 'description',
+                self::editor_options(), $PAGE->context, 'tool_mitxel', 'entry', $data->id);
+        }
+        // Only fields name, completed, priority, description, descriptionformat can be modified.
+        $updatedata = array_intersect_key((array) $data, [
+            'id' => 1,
+            'name' => 1,
+            'completed' => 1,
+            'priority' => 1,
+            'description' => 1,
+            'descriptionformat' => 1,
+        ]);
         $updatedata['timemodified'] = time();
 
         return $DB->update_record('tool_mitxel', (object) $updatedata);
@@ -89,10 +100,33 @@ class tool_mitxel_api {
         if (empty($data->courseid)) {
             throw new coding_exception('Object data must contain property courseid');
         }
-        $insertdata = array_intersect_key((array) $data, ['courseid' => 1, 'name' => 1, 'completed' => 1, 'priority' => 1]);
+        $insertdata = array_intersect_key((array) $data, [
+            'courseid' => 1,
+            'name' => 1,
+            'completed' => 1,
+            'priority' => 1,
+            'description' => 1,
+            'descriptionformat' => 1,
+        ]);
         $insertdata['timemodified'] = $insertdata['timecreated'] = time();
 
-        return $DB->insert_record('tool_mitxel', (object) $insertdata);
+        $entryid = $DB->insert_record('tool_mitxel', (object) $insertdata);
+
+        // Now when we know id update the description and save the files.
+        if (isset($data->description_editor)) {
+            $context = context_course::instance($data->courseid);
+            $editoroptions = self::editor_options();
+            $data = file_postupdate_standard_editor($data, 'description', $editoroptions, $context,
+                'tool_mitxel', 'entry', $entryid);
+            $updatedata = [
+                'id' => $entryid,
+                'description' => $data->description,
+                'descriptionformat' => $data->descriptionformat,
+            ];
+            $DB->update_record('tool_mitxel', (object) $updatedata);
+        }
+
+        return $entryid;
     }
 
     /**
@@ -105,5 +139,16 @@ class tool_mitxel_api {
         global $DB;
 
         $DB->delete_records('tool_mitxel', ['id' => $id]);
+    }
+
+    public static function editor_options() {
+        global $PAGE;
+
+        return [
+            'maxfiles' => -1,
+            'maxbytes' => 0,
+            'context' => $PAGE->context,
+            'noclean' => true,
+        ];
     }
 }

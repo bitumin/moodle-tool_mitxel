@@ -23,19 +23,20 @@ Feature: Creating, editing and deleting entries
     And I navigate to "My first Moodle plugin" in current page administration
     And I follow "New entry"
     And I set the following fields to these values:
-      | Name      | test entry 1 |
-      | Completed | 0            |
+      | Name        | test entry 1      |
+      | Completed   | 0                 |
+      | Description | plain description |
     And I press "Save changes"
     Then the following should exist in the "tool_mitxel_overview" table:
-      | Name         | Completed |
-      | test entry 1 | No        |
+      | Name         | Completed | Description       |
+      | test entry 1 | No        | plain description |
     And I click on "Edit" "link" in the "test entry 1" "table_row"
     And I set the following fields to these values:
       | Completed | 1 |
     And I press "Save changes"
     And the following should exist in the "tool_mitxel_overview" table:
-      | Name         | Completed |
-      | test entry 1 | Yes       |
+      | Name         | Description       | Completed |
+      | test entry 1 | plain description | Yes       |
     And I log out
 
   Scenario: Delete an entry

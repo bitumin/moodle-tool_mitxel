@@ -92,5 +92,27 @@ function xmldb_tool_mitxel_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2018080112, 'tool', 'mitxel');
     }
 
+    if ($oldversion < 2018080402) {
+        // Define field description to be added to tool_mitxel.
+        $table = new xmldb_table('tool_mitxel');
+        $field = new xmldb_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null, 'priority');
+
+        // Conditionally launch add field description.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field descriptionformat to be added to tool_mitxel.
+        $field = new xmldb_field('descriptionformat', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0', 'description');
+
+        // Conditionally launch add field descriptionformat.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Mitxel savepoint reached.
+        upgrade_plugin_savepoint(true, 2018080402, 'tool', 'mitxel');
+    }
+
     return true;
 }

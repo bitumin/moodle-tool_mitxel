@@ -1,8 +1,29 @@
-# Mitxel #
+# Moodle plugin - Admin Tool Mitxel
 
 A Moodle admin tool plugin
 
-## License ##
+## Run tests
+
+### Prepare testing db
+
+```
+php admin/tool/behat/cli/init.php
+php admin/tool/phpunit/cli/init.php
+```
+
+### Run Behat tests
+```
+php admin/tool/behat/cli/run.php --tags="@tool_mitxel"
+```
+
+### Run PHPUnit tests
+
+```
+vendor/bin/phpunit admin/tool/mitxel/tests/api_test.php
+vendor/bin/phpunit admin/tool/mitxel/tests/privacy_provider_test.php
+```
+
+## License
 
 2018 Mitxel Moriana <mitxel@tresipunt.com>
 
